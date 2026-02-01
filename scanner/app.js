@@ -58,7 +58,6 @@ function signals(text, ex) {
   const hasTimeLimitPhrase = timeLimitPhrase;
   const hasAttachment = attachment;
 
-
   // placeholders (later: maintain sender history / domain reputation)
   const domainUnknown = hasUrl; // v0: treat any domain as "unknown" until deepcheck exists
   const newSender = true;       // v0: assume new
