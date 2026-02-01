@@ -68,7 +68,8 @@ function signals(text, ex) {
   return {
     has_money: hasMoney,
     has_urgency: urgency,
-    asks_permission_or_login: asksPermissionOrLogin,
+    asks_login: asks_login,
+    asks_secret: asks_secret,
     has_url: hasUrl,
     domain_unknown: domainUnknown,
     has_shortener: ex.has_shortener,
