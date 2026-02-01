@@ -3,7 +3,7 @@
   "severity_order": ["PASS", "DELAY", "BLOCK"],
   "rules": [
     {"id":"payment+urgency","if":["has_money","has_urgency"],"severity":"BLOCK","evidence":["sig:money","sig:urgency"]},
-    {"id":"permission_request","if":["asks_permission_or_login"],"severity":"BLOCK","evidence":["sig:permission"]},
+    {"id":"permission_request","if":["asks_secret"],"severity":"BLOCK","evidence":["sig:permission"]}
     {"id":"unknown_domain","if":["has_url","domain_unknown"],"severity":"DELAY","evidence":["sig:url","sig:unknown_domain"]},
     {"id":"shortener_url","if":["has_shortener"],"severity":"DELAY","evidence":["sig:shortener"]},
     {"id":"threat_language","if":["has_threat"],"severity":"BLOCK","evidence":["sig:threat"]},
