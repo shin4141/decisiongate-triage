@@ -40,7 +40,7 @@ function signals(text, ex) {
 
   const money = /\$|usd|usdt|eth|sol|btc|円|¥|jpy|万円|ドル|payment|pay|invoice|fee|price|subscription/.test(t);
   const urgency = /urgent|asap|immediately|right now|today|within\s+\d+\s*(hours?|mins?)|期限|今日中|今すぐ|至急|残り\d+/.test(t);
-  const permission = /password|passcode|login|sign in|2fa|seed|recovery phrase|secret key|private key|approve|authorize|権限|ログイン|署名|シード|秘密鍵/.test(t);
+  const permission =/\b(password|passcode|login|sign\s?in|2fa|seed|seed\s?phrase|recovery\s?phrase|secret\s?key|private\s?key|wallet|signature|sign\s+transaction)\b|権限|ログイン|署名|シード|秘密鍵/.test(t);
   const threat = /account will be closed|suspended|legal action|police|arrest|訴訟|凍結|停止|逮捕|違反/.test(t);
   const timeLimitPhrase = /limited time|only \d+ left|limited slots|last chance|先着|限定|最後の/.test(t);
   const attachment = /attached|attachment|pdf|docx|zip|exe|添付|ファイル/.test(t);
