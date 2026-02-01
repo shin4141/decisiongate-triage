@@ -1,0 +1,16 @@
+{
+  "version": "v0.1",
+  "severity_order": ["PASS", "DELAY", "BLOCK"],
+  "rules": [
+    {"id":"payment+urgency","if":["has_money","has_urgency"],"severity":"BLOCK","evidence":["sig:money","sig:urgency"]},
+    {"id":"permission_request","if":["asks_permission_or_login"],"severity":"BLOCK","evidence":["sig:permission"]},
+    {"id":"unknown_domain","if":["has_url","domain_unknown"],"severity":"DELAY","evidence":["sig:url","sig:unknown_domain"]},
+    {"id":"shortener_url","if":["has_shortener"],"severity":"DELAY","evidence":["sig:shortener"]},
+    {"id":"threat_language","if":["has_threat"],"severity":"BLOCK","evidence":["sig:threat"]},
+    {"id":"authority_impersonation","if":["impersonation_claim"],"severity":"BLOCK","evidence":["sig:authority"]},
+    {"id":"time_limit_phrase","if":["has_time_limit_phrase"],"severity":"DELAY","evidence":["sig:time_limit_phrase"]},
+    {"id":"new_contact_high_stakes","if":["new_sender","high_stakes"],"severity":"DELAY","evidence":["sig:new_sender","sig:high_stakes"]},
+    {"id":"attachment_only","if":["has_attachment","no_context"],"severity":"DELAY","evidence":["sig:attachment","sig:no_context"]},
+    {"id":"safe_pattern","if":["no_links","no_money","no_permission","no_threat"],"severity":"PASS","evidence":["sig:low_risk_surface"]}
+  ]
+}
