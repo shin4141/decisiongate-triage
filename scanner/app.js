@@ -61,7 +61,7 @@ function signals(text, ex) {
   // placeholders (later: maintain sender history / domain reputation)
   const domainUnknown = hasUrl; // v0: treat any domain as "unknown" until deepcheck exists
   const newSender = true;       // v0: assume new
-  const highStakes = money || permission;
+  const highStakes = money || asks_secret;
 
   const safeSurface = (!hasUrl && !hasMoney && !asksPermissionOrLogin && !hasThreat);
 
