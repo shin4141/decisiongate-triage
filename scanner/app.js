@@ -49,7 +49,7 @@ function signals(text, ex) {
 
   const hasUrl = ex.urls.length > 0;
   const hasMoney = money;
-  const asksPermissionOrLogin = permission;
+  const asksPermissionOrLogin = asks_secret || asks_login;
   const hasThreat = threat;
   const hasTimeLimitPhrase = timeLimitPhrase;
   const hasAttachment = attachment;
