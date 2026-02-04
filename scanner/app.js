@@ -38,51 +38,98 @@ function extract(text) {
 function signals(text, ex) {
   const t = text.toLowerCase();
 
-  const money = /\$|usd|usdt|eth|sol|btc|円|¥|jpy|万円|ドル|payment|pay|invoice|fee|price|subscription/.test(t);
-  const urgency = /urgent|asap|immediately|right now|today|within\s+\d+\s*(hours?|mins?)|期限|今日中|今すぐ|至急|残り\d+/.test(t);
+  // money / urgency
+  const moneyRe =
+    /\$|usd|usdt|eth|sol|btc|円|¥|jpy|万円|ドル|payment|pay|invoice|fee|price|subscription|subscribed|billing|charge|refund|transfer|send money|送金|支払い|請求|返金/;
+  const urgencyRe =
+    /urgent|asap|immediately|right now|today|within\s+\d+\s*(hours?|hrs?|mins?|minutes?)|期限|本日|至急|今すぐ|24時間|48時間|最終/;
 
-  // split "permission" into login vs secret/credential
-  const asks_login = /\b(login|sign\s?in)\b|ログイン/.test(t);
-  const asks_secret =
-    /\b(password|passcode|2fa|seed|seed\s?phrase|recovery\s?phrase|secret\s?key|private\s?key|wallet|signature|sign\s+transaction)\b|署名|シード|秘密鍵|権限/.test(t);
+  const hasMoney = moneyRe.test(t);
+  const hasUrgency = urgencyRe.test(t);
 
-  const threat = /account will be closed|suspended|legal action|police|arrest|訴訟|凍結|停止|逮捕|違反/.test(t);
-  const timeLimitPhrase = /limited time|only \d+ left|limited slots|last chance|先着|限定|最後の/.test(t);
-  const attachment = /attached|attachment|pdf|docx|zip|exe|添付|ファイル/.test(t);
-  const noContext = text.trim().length < 40;
+  // login vs secret/credential
+  const asksLogin = /\b(login|log in|sign\s?in)\b|ログイン/.test(t);
 
+  const secretSeedKeyRe =
+    /\b(password|passcode|2fa|otp|seed|seed\s?phrase|recovery\s?phrase|mnemonic|secret\s?key|private\s?key)\b|パスワード|シード|秘密鍵|復元フレーズ/;
+  const asksSecretSeedKey = secretSeedKeyRe.test(t);
+
+  // signature / approval (crypto-style)
+  const sigApproveRe =
+    /\b(sign|signature|approve|approval|authorize|confirm|verify wallet|connect wallet)\b|署名|承認|接続|ウォレット/;
+  const asksSignatureOrApproval = sigApproveRe.test(t);
+
+  // payment/transfer direct ask (separate from "money words")
+  const payTransferRe =
+    /\b(pay|payment|send|transfer|wire|remit|deposit|withdraw)\b|支払|送金|振込|入金|出金/;
+  const asksPaymentOrTransfer = payTransferRe.test(t);
+
+  // threats / time limit
+  const threatRe =
+    /account will be closed|suspended|legal action|police|arrest|訴訟|凍結|停止|逮捕|法的措置|閉鎖/;
+  const hasThreat = threatRe.test(t);
+
+  const timeLimitPhraseRe =
+    /limited time|only \d+ left|limited slots|last chance|先着|限定|最後の|残りわずか/;
+  const hasTimeLimitPhrase = timeLimitPhraseRe.test(t);
+
+  // attachments: distinguish "exec/macro" vs normal
+  const attachmentRe = /attached|attachment|添付|ファイル|pdf|docx|zip|rar|7z|dmg|exe|apk|scr|js|vbs|bat|cmd|ps1|xlsm|docm/i;
+  const hasAttachment = attachmentRe.test(text);
+
+  const execMacroRe = /\.(exe|dmg|apk|scr|js|vbs|bat|cmd|ps1|xlsm|docm)\b/i;
+  const hasExecutableOrMacroAttachment = execMacroRe.test(text) || /\bmacro\b/i.test(text);
+
+  // impersonation claim (support/security/admin)
+  const impersonationRe =
+    /\b(support|security|admin|moderator|official|team|compliance|trust & safety|customer service)\b|公式|運営|サポート|管理者|セキュリティ/;
+  const hasImpersonationClaim = impersonationRe.test(t);
+
+  // surface
   const hasUrl = ex.urls.length > 0;
-  const hasMoney = money;
-  const asksPermissionOrLogin = asks_secret || asks_login;
-  const hasThreat = threat;
-  const hasTimeLimitPhrase = timeLimitPhrase;
-  const hasAttachment = attachment;
 
-  // placeholders (later: maintain sender history / domain reputation)
-  const domainUnknown = hasUrl; // v0: treat any domain as "unknown" until deepcheck exists
-  const newSender = true;       // v0: assume new
-  const highStakes = money || asks_secret;
+  // placeholders
+  const domainUnknown = hasUrl; // until reputation/deepcheck exists
+  const newSender = true;       // until history exists
 
-  const safeSurface = (!hasUrl && !hasMoney && !asksPermissionOrLogin && !hasThreat);
+  // high stakes: login or payment or secret or signature
+  const highStakes = asksLogin || asksPaymentOrTransfer || asksSecretSeedKey || asksSignatureOrApproval;
+
+  const noContext = text.trim().length < 40;
+  const safeSurface = (!hasUrl && !hasMoney && !asksLogin && !asksSecretSeedKey && !hasThreat);
 
   return {
+    // used by rules.json
     has_money: hasMoney,
-    has_urgency: urgency,
-    asks_login: asks_login,
-    asks_secret: asks_secret,
+    has_urgency: hasUrgency,
+
+    asks_login: asksLogin,
+
+    asks_secret_or_seed_or_private_key_or_mnemonic: asksSecretSeedKey,
+    asks_signature_or_approval: asksSignatureOrApproval,
+    asks_payment_or_transfer: asksPaymentOrTransfer,
+    has_executable_or_macro_attachment: hasExecutableOrMacroAttachment,
+
     has_url: hasUrl,
     domain_unknown: domainUnknown,
     has_shortener: ex.has_shortener,
+
     has_threat: hasThreat,
-    impersonation_claim: false, // v0 stub
     has_time_limit_phrase: hasTimeLimitPhrase,
+
     new_sender: newSender,
     high_stakes: highStakes,
+
+    // existing / compatibility
     has_attachment: hasAttachment,
     no_context: noContext,
+
+    has_impersonation_claim: hasImpersonationClaim,
+
+    // safe_pattern helpers (v0.2-general expects these names)
     no_links: !hasUrl,
     no_money: !hasMoney,
-    no_permission: !asksPermissionOrLogin,
+    no_secret_request: !asksSecretSeedKey && !asksSignatureOrApproval && !asksPaymentOrTransfer,
     no_threat: !hasThreat
   };
 }
