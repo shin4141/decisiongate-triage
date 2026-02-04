@@ -1,7 +1,3 @@
-Mode:B
-
-了解。READMEは「入口（Demo）→何ができる→安全境界→ローカル実行→構造（PIC）→マイルストーン」の順で、丸ごと貼れる形を出す。
-
 ````md
 # DecisionGate Message Triage
 
