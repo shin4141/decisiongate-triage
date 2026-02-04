@@ -11,3 +11,5 @@ button { border-radius: 12px; padding: 10px 12px; border: 1px solid rgba(127,127
 button.ghost { background: transparent; opacity: .8; }
 .status { font-size: 12px; opacity: .75; margin-left: auto; }
 .out { white-space: pre-wrap; word-break: break-word; padding: 12px; border-radius: 12px; border: 1px solid rgba(127,127,127,.25); min-height: 80px; }
+textarea { min-height: 220px; }
+.out { min-height: 220px; }
