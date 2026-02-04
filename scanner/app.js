@@ -176,7 +176,21 @@ async function main() {
     const text = input.value || "";
     const card = buildCard(text, rules);
     out.textContent = pretty(card);
-    share.textContent =
+    const enc = encodeURIComponent;
+const mk = (label, q) => {
+  const url =
+    label.includes("Google") ? `https://www.google.com/search?q=${enc(q)}` :
+    label.includes("Reddit") ? `https://www.google.com/search?q=${enc(q)}` :
+    label.includes("X") ? `https://x.com/search?q=${enc(q)}` :
+    `https://www.google.com/search?q=${enc(q)}`;
+  return `- <a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>: ${q}`;
+};
+
+share.innerHTML =
+  `${card.share_report.short}<br><br>` +
+  `Search:<br>` +
+  (card.search.queries || []).map(q => mk(q.label, q.q)).join("<br>");
+
       `${card.share_report.short}\n\n` +
       `Search:\n` +
       (card.search.queries || []).map(q => `- ${q.label}: ${q.q}`).join("\n");
