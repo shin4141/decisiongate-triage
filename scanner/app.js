@@ -88,8 +88,39 @@ function signals(text, ex) {
   // surface
   const hasUrl = ex.urls.length > 0;
 
-  // placeholders
-  const domainUnknown = hasUrl; // until reputation/deepcheck exists
+  // domain allowlist to reduce false positives
+  const TRUSTED_DOMAINS = new Set([
+    "github.com",
+    "google.com",
+    "reddit.com",
+    "x.com",
+    "twitter.com",
+    "apple.com",
+    "microsoft.com",
+    "discord.com",
+    "telegram.org",
+    "wikipedia.org",
+    "paypal.com",
+    "stripe.com"
+  ]);
+  const isTrustedDomain = (domain) => {
+    if (!domain) return false;
+    if (TRUSTED_DOMAINS.has(domain)) return true;
+    for (const root of TRUSTED_DOMAINS) {
+      if (domain.endsWith(`.${root}`)) return true;
+    }
+    return false;
+  };
+  const extractedDomains = (ex.domains && ex.domains.length > 0)
+    ? ex.domains
+    : ex.urls.map(u => (u && u.domain ? u.domain : "")).filter(Boolean);
+  const domainUnknown = extractedDomains.some(d => !isTrustedDomain(d));
+  /*
+    Manual tests:
+    1) "See https://github.com/openai/ and https://x.com/xyz" => domain_unknown: false
+    2) "Please review https://login.example.com/reset now" => domain_unknown: true
+    3) "Docs at https://docs.google.com and https://support.apple.com" => domain_unknown: false
+  */
   const newSender = true;       // until history exists
 
   // high stakes: login or payment or secret or signature
