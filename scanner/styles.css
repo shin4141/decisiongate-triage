@@ -13,3 +13,20 @@ button.ghost { background: transparent; opacity: .8; }
 .out { white-space: pre-wrap; word-break: break-word; padding: 12px; border-radius: 12px; border: 1px solid rgba(127,127,127,.25); min-height: 80px; }
 textarea { min-height: 220px; }
 .out { min-height: 220px; }
+body{
+  background: url("./bg.jpg") center/cover fixed no-repeat;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,.35);
+  pointer-events:none;
+  z-index:-1;
+}
+
+.panel{
+  background: rgba(20,20,20,.55);
+  backdrop-filter: blur(8px);
+}
