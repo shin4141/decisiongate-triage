@@ -1,17 +1,104 @@
 {
-  "version": "v0.1",
+  "version": "v0.2-general",
   "severity_order": ["PASS", "DELAY", "BLOCK"],
   "rules": [
-    {"id":"payment+urgency","if":["has_money","has_urgency"],"severity":"BLOCK","evidence":["sig:money","sig:urgency"]},
-    {"id":"permission_request","if":["asks_secret"],"severity":"BLOCK","evidence":["sig:permission"]},
-    {"id":"login_link","if":["asks_login"],"severity":"DELAY","evidence":["sig:login"]},
-    {"id":"unknown_domain","if":["has_url","domain_unknown"],"severity":"DELAY","evidence":["sig:url","sig:unknown_domain"]},
-    {"id":"shortener_url","if":["has_shortener"],"severity":"DELAY","evidence":["sig:shortener"]},
-    {"id":"threat_language","if":["has_threat"],"severity":"BLOCK","evidence":["sig:threat"]},
-    {"id":"time_limit_phrase","if":["has_time_limit_phrase"],"severity":"DELAY","evidence":["sig:time_limit_phrase"]},
-    {"id":"new_contact_high_stakes","if":["new_sender","high_stakes"],"severity":"DELAY","evidence":["sig:new_sender","sig:high_stakes"]},
-    {"id":"attachment_only","if":["has_attachment","no_context"],"severity":"DELAY","evidence":["sig:attachment","sig:no_context"]},
-    {"id":"safe_pattern","if":["no_links","no_money","no_permission","no_threat"],"severity":"PASS","evidence":["sig:low_risk_surface"]}
+    {
+      "id": "secret_seed_privatekey_mnemonic",
+      "if": ["asks_secret_or_seed_or_private_key_or_mnemonic"],
+      "severity": "BLOCK",
+      "evidence": ["sig:secret_seed_key"]
+    },
+    {
+      "id": "signature_or_approval_request",
+      "if": ["asks_signature_or_approval"],
+      "severity": "BLOCK",
+      "evidence": ["sig:signature_or_approval"]
+    },
+    {
+      "id": "payment_or_transfer",
+      "if": ["asks_payment_or_transfer"],
+      "severity": "BLOCK",
+      "evidence": ["sig:payment_or_transfer"]
+    },
+    {
+      "id": "money+urgency",
+      "if": ["has_money", "has_urgency"],
+      "severity": "BLOCK",
+      "evidence": ["sig:money", "sig:urgency"]
+    },
+    {
+      "id": "impersonation_support_security",
+      "if": ["has_impersonation_claim", "has_url"],
+      "severity": "DELAY",
+      "evidence": ["sig:impersonation", "sig:url"]
+    },
+    {
+      "id": "threat_or_account_closure",
+      "if": ["has_threat"],
+      "severity": "BLOCK",
+      "evidence": ["sig:threat"]
+    },
+    {
+      "id": "login_link",
+      "if": ["asks_login"],
+      "severity": "DELAY",
+      "evidence": ["sig:login"]
+    },
+    {
+      "id": "shortener_url",
+      "if": ["has_shortener"],
+      "severity": "DELAY",
+      "evidence": ["sig:shortener"]
+    },
+    {
+      "id": "shortener+login_or_payment",
+      "if": ["has_shortener", "high_stakes"],
+      "severity": "BLOCK",
+      "evidence": ["sig:shortener", "sig:high_stakes"]
+    },
+    {
+      "id": "unknown_domain",
+      "if": ["has_url", "domain_unknown"],
+      "severity": "DELAY",
+      "evidence": ["sig:url", "sig:unknown_domain"]
+    },
+    {
+      "id": "unknown_domain+high_stakes",
+      "if": ["has_url", "domain_unknown", "high_stakes"],
+      "severity": "BLOCK",
+      "evidence": ["sig:url", "sig:unknown_domain", "sig:high_stakes"]
+    },
+    {
+      "id": "attachment_executable_or_macro",
+      "if": ["has_executable_or_macro_attachment"],
+      "severity": "BLOCK",
+      "evidence": ["sig:attachment_exec_macro"]
+    },
+    {
+      "id": "attachment_no_context",
+      "if": ["has_attachment", "no_context"],
+      "severity": "DELAY",
+      "evidence": ["sig:attachment", "sig:no_context"]
+    },
+    {
+      "id": "time_limit_phrase",
+      "if": ["has_time_limit_phrase"],
+      "severity": "DELAY",
+      "evidence": ["sig:time_limit_phrase"]
+    },
+    {
+      "id": "new_sender_high_stakes",
+      "if": ["new_sender", "high_stakes"],
+      "severity": "DELAY",
+      "evidence": ["sig:new_sender", "sig:high_stakes"]
+    },
+    {
+      "id": "safe_pattern",
+      "if": ["no_links", "no_money", "no_secret_request", "no_threat"],
+      "severity": "PASS",
+      "evidence": ["sig:low_risk_surface"]
+    }
   ]
 }
+
 
