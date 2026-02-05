@@ -56,7 +56,7 @@ function signals(text, ex) {
 
   // OTP/2FA code sharing request (phishing)
   const otpShareRe =
-    /(\b(reply|send|share|tell|give|provide)\b|返信|送って|送信して|教えて|共有して).{0,40}(\b(otp|2fa|verification\s?code|security\s?code|auth(entication)?\s?code|one[-\s]?time\s?(code|password)|\d{4,8}[-\s]?digit\s+code)\b|認証コード|確認コード|セキュリティコード|ワンタイムコード|ワンタイムパス)|(\b(otp|2fa|verification\s?code|security\s?code|auth(entication)?\s?code|one[-\s]?time\s?(code|password)|\d{4,8}[-\s]?digit\s+code)\b|認証コード|確認コード|セキュリティコード|ワンタイムコード|ワンタイムパス).{0,40}(\b(reply|send|share|tell|give|provide)\b|返信|送って|送信して|教えて|共有して)/;
+    /(\b(reply|send|share|tell|give|provide|forward)\b|返信|送って|送信して|教えて|共有して).{0,40}(\b(otp|2fa|verification\s?code|security\s?code|auth(entication)?\s?code|one[-\s]?time\s?(code|password)|\d{4,8}[-\s]?digit\s+code|code)\b|認証コード|確認コード|セキュリティコード|ワンタイムコード|ワンタイムパス)|(\b(otp|2fa|verification\s?code|security\s?code|auth(entication)?\s?code|one[-\s]?time\s?(code|password)|\d{4,8}[-\s]?digit\s+code|code)\b|認証コード|確認コード|セキュリティコード|ワンタイムコード|ワンタイムパス).{0,40}(\b(reply|send|share|tell|give|provide|forward)\b|返信|送って|送信して|教えて|共有して)/;
   const asksOtpShare = otpShareRe.test(t);
   /*
     Manual tests (OTP share):
