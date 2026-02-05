@@ -93,6 +93,18 @@
       "evidence": ["sig:delivery_market", "sig:url", "sig:high_stakes"]
     },
     {
+      "id": "payment_refund_link",
+      "if": ["has_payment_refund_scam", "has_url"],
+      "severity": "DELAY",
+      "evidence": ["sig:payment_refund", "sig:url"]
+    },
+    {
+      "id": "payment_refund_high_stakes",
+      "if": ["has_payment_refund_scam", "has_url", "high_stakes"],
+      "severity": "BLOCK",
+      "evidence": ["sig:payment_refund", "sig:url", "sig:high_stakes"]
+    },
+    {
       "id": "attachment_executable_or_macro",
       "if": ["has_executable_or_macro_attachment"],
       "severity": "BLOCK",

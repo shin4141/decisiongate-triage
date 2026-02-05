@@ -115,6 +115,17 @@ function signals(text, ex) {
     C) "メルカリ取引：受取確認はこちら https://example.com" => DELAY (unless high_stakes)
   */
 
+  // payment / refund / billing scam
+  const paymentRefundRe =
+    /(返金|返金手続き|請求|未払い|支払い確認|料金|利用料金|引き落とし|決済|異常な支払い|二重請求|PayPay|PayPal|Stripe|クレジット|カード|銀行|振込|口座|refund|billing|invoice|overdue|payment required|subscription|chargeback|double charge|bank transfer|credit card|paypal|stripe)/i;
+  const hasPaymentRefundScam = paymentRefundRe.test(t);
+  /*
+    Manual tests (payment/refund):
+    A) "返金手続きのためこちらを確認：https://example.com" => DELAY (unless high_stakes)
+    B) "未払い料金があります。ログインして支払い：https://example.com/login" => BLOCK
+    C) "PayPal refund required. Please login: https://example.com" => BLOCK
+  */
+
   // threats / time limit
   const threatRe =
     /account will be closed|suspended|legal action|police|arrest|訴訟|凍結|停止|逮捕|法的措置|閉鎖/;
@@ -198,6 +209,7 @@ function signals(text, ex) {
     domain_unknown: domainUnknown,
     has_shortener: ex.has_shortener,
     has_delivery_or_market_spoof: hasDeliveryOrMarketSpoof,
+    has_payment_refund_scam: hasPaymentRefundScam,
 
     has_threat: hasThreat,
     has_time_limit_phrase: hasTimeLimitPhrase,
