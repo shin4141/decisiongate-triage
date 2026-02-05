@@ -383,7 +383,28 @@ async function main() {
   const gate = $("gate");
   const reasons = $("reasons");
   const counts = $("counts");
+  const copyQuick = $("copy-quick");
+  const copyReport = $("copy-report");
   const status = $("status");
+
+  let lastQuickShare = "";
+  let lastReportShare = "";
+  const copyText = async (text) => {
+    if (!text) return;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        prompt("Copy to clipboard:", text);
+      }
+      status.textContent = "Copied";
+    } catch {
+      prompt("Copy to clipboard:", text);
+    }
+  };
+
+  copyQuick.onclick = () => copyText(lastQuickShare);
+  copyReport.onclick = () => copyText(lastReportShare);
 
   $("run").onclick = async () => {
     const text = input.value || "";
@@ -410,6 +431,11 @@ share.innerHTML =
   `${card.share_report.short}<br><br>` +
   `Search:<br>` +
   (card.search.queries || []).map(q => mk(q.label, q.q)).join("<br>");
+    lastQuickShare = card.share_report.family_one_liner || "";
+    lastReportShare =
+      `${card.share_report.short}\n\n` +
+      `Search:\n` +
+      (card.search.queries || []).map(q => `- ${q.label}: ${q.q}`).join("\n");
     status.textContent = `Done. severity=${card.gate.severity}`;
   };
 
@@ -417,6 +443,8 @@ share.innerHTML =
     input.value = "";
     out.textContent = "{}";
     share.textContent = "";
+    lastQuickShare = "";
+    lastReportShare = "";
     gate.textContent = "—";
     gate.classList.remove("pass", "delay", "block");
     reasons.textContent = "—";
