@@ -126,6 +126,20 @@ function signals(text, ex) {
     C) "PayPal refund required. Please login: https://example.com" => BLOCK
   */
 
+  // prize / grant / giveaway scam
+  const prizeGrantRe =
+    /(当選|受賞|賞金|ギフト券|給付金|支援金|補助金|還元|受け取り|受取|prize|winner|lottery|giveaway|grant|subsidy|reward|gift card|claim your reward)/i;
+  const hasPrizeOrGrantScam = prizeGrantRe.test(t);
+  const feeTermsRe =
+    /(手数料|税金|送料|振込|入金|fee|tax|shipping|transfer|deposit)/i;
+  const hasMoneyOrFeeTerms = feeTermsRe.test(t);
+  /*
+    Manual tests (prize/grant):
+    A) "当選しました。受取はこちら：https://example.com" => DELAY
+    B) "当選金の受取に手数料が必要です。今すぐ支払ってください。" => BLOCK
+    C) "You've won a prize. Login to claim: https://example.com/login" => BLOCK
+  */
+
   // threats / time limit
   const threatRe =
     /account will be closed|suspended|legal action|police|arrest|訴訟|凍結|停止|逮捕|法的措置|閉鎖/;
@@ -210,6 +224,8 @@ function signals(text, ex) {
     has_shortener: ex.has_shortener,
     has_delivery_or_market_spoof: hasDeliveryOrMarketSpoof,
     has_payment_refund_scam: hasPaymentRefundScam,
+    has_prize_or_grant_scam: hasPrizeOrGrantScam,
+    has_money_or_fee_terms: hasMoneyOrFeeTerms,
 
     has_threat: hasThreat,
     has_time_limit_phrase: hasTimeLimitPhrase,

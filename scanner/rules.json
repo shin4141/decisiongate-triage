@@ -105,6 +105,24 @@
       "evidence": ["sig:payment_refund", "sig:url", "sig:high_stakes"]
     },
     {
+      "id": "prize_grant_link",
+      "if": ["has_prize_or_grant_scam", "has_url"],
+      "severity": "DELAY",
+      "evidence": ["sig:prize_grant", "sig:url"]
+    },
+    {
+      "id": "prize_grant_high_stakes",
+      "if": ["has_prize_or_grant_scam", "has_url", "high_stakes"],
+      "severity": "BLOCK",
+      "evidence": ["sig:prize_grant", "sig:url", "sig:high_stakes"]
+    },
+    {
+      "id": "prize_grant_fee_or_tax",
+      "if": ["has_prize_or_grant_scam", "has_money_or_fee_terms"],
+      "severity": "BLOCK",
+      "evidence": ["sig:prize_grant", "sig:fee_tax"]
+    },
+    {
       "id": "attachment_executable_or_macro",
       "if": ["has_executable_or_macro_attachment"],
       "severity": "BLOCK",
