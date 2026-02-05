@@ -136,9 +136,9 @@
     },
     {
       "id": "family_emergency_money_or_transfer",
-      "if": ["has_family_emergency_scam", "has_money"],
+      "if": ["has_family_emergency_scam", "asks_payment_or_transfer"],
       "severity": "BLOCK",
-      "evidence": ["sig:family_emergency", "sig:money"]
+      "evidence": ["sig:family_emergency", "sig:payment_or_transfer"]
     },
     {
       "id": "family_emergency_payment_or_transfer",
