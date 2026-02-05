@@ -13,6 +13,18 @@ button.ghost { background: transparent; opacity: .8; }
 .out { white-space: pre-wrap; word-break: break-word; padding: 12px; border-radius: 12px; border: 1px solid rgba(127,127,127,.25); min-height: 80px; }
 textarea { min-height: 220px; }
 .out { min-height: 220px; }
+
+.card { display: grid; gap: 8px; }
+.card-row { display: flex; gap: 12px; align-items: baseline; }
+.card-label { width: 90px; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; opacity: .7; }
+.gate { font-weight: 700; }
+.gate.pass { color: #6ee7a8; }
+.gate.delay { color: #f7c46c; }
+.gate.block { color: #ff7b7b; }
+.out-share { background: rgba(255,255,255,.04); color: #f5f5f5; }
+.out-details { background: rgba(0,0,0,.45); color: #e6e6e6; }
+.details summary { cursor: pointer; opacity: .85; }
+.details[open] summary { margin-bottom: 10px; }
 body{
   background: url("./bg.jpg") center/cover fixed no-repeat;
 }

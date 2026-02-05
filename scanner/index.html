@@ -26,12 +26,32 @@
 
     <section class="panel">
       <label class="lbl">Decision Card</label>
-      <pre id="out" class="out">{}</pre>
+      <div class="card">
+        <div class="card-row">
+          <span class="card-label">Gate</span>
+          <span id="gate" class="gate">—</span>
+        </div>
+        <div class="card-row">
+          <span class="card-label">Reasons</span>
+          <span id="reasons">—</span>
+        </div>
+        <div class="card-row">
+          <span class="card-label">Counts</span>
+          <span id="counts">—</span>
+        </div>
+      </div>
     </section>
 
     <section class="panel">
       <label class="lbl">Share Report</label>
-      <pre id="share" class="out"></pre>
+      <pre id="share" class="out out-share"></pre>
+    </section>
+
+    <section class="panel">
+      <details class="details">
+        <summary>Details</summary>
+        <pre id="out" class="out out-details">{}</pre>
+      </details>
     </section>
   </main>
 

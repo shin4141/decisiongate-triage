@@ -246,6 +246,9 @@ async function main() {
   const input = $("input");
   const out = $("out");
   const share = $("share");
+  const gate = $("gate");
+  const reasons = $("reasons");
+  const counts = $("counts");
   const status = $("status");
 
   const rules = await loadRules();
@@ -254,6 +257,12 @@ async function main() {
     const text = input.value || "";
     const card = buildCard(text, rules);
     out.textContent = pretty(card);
+    gate.textContent = card.gate.severity;
+    gate.classList.remove("pass", "delay", "block");
+    const sev = String(card.gate.severity || "").toLowerCase();
+    if (sev) gate.classList.add(sev);
+    reasons.textContent = (card.gate.reasons || []).join(", ") || "none";
+    counts.textContent = `URLs=${card.extracted.urls.length}, Emails=${card.extracted.emails.length}, Phones=${card.extracted.phones.length}`;
     const enc = encodeURIComponent;
 const mk = (label, q) => {
   const url =
@@ -279,6 +288,10 @@ share.innerHTML =
     input.value = "";
     out.textContent = "{}";
     share.textContent = "";
+    gate.textContent = "—";
+    gate.classList.remove("pass", "delay", "block");
+    reasons.textContent = "—";
+    counts.textContent = "—";
     status.textContent = "";
   };
 
