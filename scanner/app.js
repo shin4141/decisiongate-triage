@@ -55,9 +55,20 @@ function signals(text, ex) {
   const asksSecretSeedKey = secretSeedKeyRe.test(t);
 
   // OTP/2FA code sharing request (phishing)
-  const otpShareRe =
-    /(\b(reply|send|share|tell|give|provide|forward)\b|返信|送って|送信して|教えて|共有して).{0,40}(\b(otp|2fa|verification\s?code|security\s?code|auth(entication)?\s?code|one[-\s]?time\s?(code|password)|\d{4,8}[-\s]?digit\s+code|code)\b|認証コード|確認コード|セキュリティコード|ワンタイムコード|ワンタイムパス)|(\b(otp|2fa|verification\s?code|security\s?code|auth(entication)?\s?code|one[-\s]?time\s?(code|password)|\d{4,8}[-\s]?digit\s+code|code)\b|認証コード|確認コード|セキュリティコード|ワンタイムコード|ワンタイムパス).{0,40}(\b(reply|send|share|tell|give|provide|forward)\b|返信|送って|送信して|教えて|共有して)/;
-  const asksOtpShare = otpShareRe.test(t);
+  const actionVerbRe = /\b(reply|send|share|tell|forward|give)\b/i;
+  const codeNounRe = /\b(verification code|security code|auth(?:entication)? code|one[-\s]?time (?:code|password)|6[-\s]?digit code|code you received|otp|2fa)\b/i;
+  const actionThenCodeRe = new RegExp(`${actionVerbRe.source}.{0,60}${codeNounRe.source}`, "i");
+  const codeThenActionRe = new RegExp(`${codeNounRe.source}.{0,60}${actionVerbRe.source}`, "i");
+  const hasActionVerb = actionVerbRe.test(text);
+  const hasEnterOfficial = /\b(enter|type|input)\b.*\b(official|app|site)\b/i.test(text);
+  let asksOtpShare = actionThenCodeRe.test(text) || codeThenActionRe.test(text);
+  if (hasEnterOfficial && !hasActionVerb) asksOtpShare = false;
+  /*
+    Acceptance tests:
+    1) "Reply with the verification code you received." => BLOCK
+    2) "Support: reply with the 6-digit code." => BLOCK
+    3) "Do not share this code. Enter it on the official app/site." => PASS (no URL)
+  */
   /*
     Manual tests (OTP share):
     A) "Support team here. Reply with the 6-digit verification code you just received." => BLOCK
