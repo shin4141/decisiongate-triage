@@ -177,6 +177,24 @@
       "evidence": ["sig:police_legal", "sig:threat", "sig:url"]
     },
     {
+      "id": "investment_hustle_link",
+      "if": ["has_investment_hustle_scam", "has_url"],
+      "severity": "DELAY",
+      "evidence": ["sig:investment_hustle", "sig:url"]
+    },
+    {
+      "id": "investment_hustle_high_stakes",
+      "if": ["has_investment_hustle_scam", "high_stakes"],
+      "severity": "BLOCK",
+      "evidence": ["sig:investment_hustle", "sig:high_stakes"]
+    },
+    {
+      "id": "investment_hustle_payment_or_transfer",
+      "if": ["has_investment_hustle_scam", "asks_payment_or_transfer"],
+      "severity": "BLOCK",
+      "evidence": ["sig:investment_hustle", "sig:payment_or_transfer"]
+    },
+    {
       "id": "attachment_executable_or_macro",
       "if": ["has_executable_or_macro_attachment"],
       "severity": "BLOCK",

@@ -165,6 +165,17 @@ function signals(text, ex) {
     C) "Police notice: pay a fine now or face arrest. https://example.com" => BLOCK
   */
 
+  // investment / side-hustle scam
+  const investmentHustleRe =
+    /(投資|副業|不労所得|高利回り|確実に儲かる|元本保証|月利|日利|利益保証|先出し|自動売買|AI投資|シグナル配信|コピトレ|紹介|招待|限定枠|line追加|オープンチャット|こっちのリンク|コミュニティ参加|investment|passive income|guaranteed returns|risk[-\s]?free|high yield|daily profit|copy trading|signals|ai trading|exclusive group|invite)/i;
+  const hasInvestmentHustleScam = investmentHustleRe.test(t);
+  /*
+    Manual tests (investment/hustle):
+    A) "限定の投資コミュニティはこちら：https://example.com" => DELAY
+    B) "元本保証・高利回り。ログインして参加：https://example.com/login" => BLOCK
+    C) "AI trading group. Send a deposit now." => BLOCK
+  */
+
   // threats / time limit
   const threatRe =
     /account will be closed|suspended|legal action|police|arrest|訴訟|凍結|停止|逮捕|法的措置|閉鎖/;
@@ -253,6 +264,7 @@ function signals(text, ex) {
     has_money_or_fee_terms: hasMoneyOrFeeTerms,
     has_family_emergency_scam: hasFamilyEmergencyScam,
     has_police_legal_threat: hasPoliceLegalThreat,
+    has_investment_hustle_scam: hasInvestmentHustleScam,
 
     has_threat: hasThreat,
     has_time_limit_phrase: hasTimeLimitPhrase,
