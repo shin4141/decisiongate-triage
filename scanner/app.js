@@ -59,9 +59,9 @@ function signals(text, ex) {
   const codeNounRe = /\b(verification code|security code|auth(?:entication)? code|one[-\s]?time (?:code|password)|6[-\s]?digit code|code you received|otp|2fa)\b/i;
   const actionThenCodeRe = new RegExp(`${actionVerbRe.source}[\\s\\S]{0,80}${codeNounRe.source}`, "i");
   const codeThenActionRe = new RegExp(`${codeNounRe.source}[\\s\\S]{0,80}${actionVerbRe.source}`, "i");
-  const hasActionVerb = actionVerbRe.test(text);
-  const hasEnterOfficial = /\b(enter|type|input)\b.*\b(official|app|site)\b/i.test(text);
-  let asksOtpShare = actionThenCodeRe.test(text) || codeThenActionRe.test(text);
+  const hasActionVerb = actionVerbRe.test(t);
+  const hasEnterOfficial = /\b(enter|type|input)\b.*\b(official|app|site)\b/i.test(t);
+  let asksOtpShare = actionThenCodeRe.test(t) || codeThenActionRe.test(t);
   if (hasEnterOfficial && !hasActionVerb) asksOtpShare = false;
   /*
     Acceptance tests:
