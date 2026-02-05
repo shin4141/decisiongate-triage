@@ -81,6 +81,18 @@
       "evidence": ["sig:url", "sig:unknown_domain", "sig:high_stakes"]
     },
     {
+      "id": "delivery_or_market_spoof_link",
+      "if": ["has_delivery_or_market_spoof", "has_url"],
+      "severity": "DELAY",
+      "evidence": ["sig:delivery_market", "sig:url"]
+    },
+    {
+      "id": "delivery_or_market_spoof_high_stakes",
+      "if": ["has_delivery_or_market_spoof", "has_url", "high_stakes"],
+      "severity": "BLOCK",
+      "evidence": ["sig:delivery_market", "sig:url", "sig:high_stakes"]
+    },
+    {
       "id": "attachment_executable_or_macro",
       "if": ["has_executable_or_macro_attachment"],
       "severity": "BLOCK",

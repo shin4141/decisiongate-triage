@@ -104,6 +104,17 @@ function signals(text, ex) {
     /\b(pay|payment|send|transfer|wire|remit|deposit|withdraw)\b|支払|送金|振込|入金|出金/;
   const asksPaymentOrTransfer = payTransferRe.test(t);
 
+  // delivery / flea-market spoof
+  const deliveryMarketRe =
+    /(ヤマト|佐川|日本郵便|ゆうパック|不在|再配達|配達|荷物|追跡|伝票|お届け|住所確認|関税|メルカリ|ラクマ|PayPayフリマ|購入|発送|受取|取引|delivery|parcel|shipment|reschedule|failed delivery|customs|tracking|waybill)/i;
+  const hasDeliveryOrMarketSpoof = deliveryMarketRe.test(t);
+  /*
+    Manual tests (delivery/market spoof):
+    A) "不在のため再配達が必要です。こちらから確認：https://example.com" => DELAY (or BLOCK only if high_stakes words appear)
+    B) "配送先の確認のためログインしてください：https://example.com/login" => BLOCK
+    C) "メルカリ取引：受取確認はこちら https://example.com" => DELAY (unless high_stakes)
+  */
+
   // threats / time limit
   const threatRe =
     /account will be closed|suspended|legal action|police|arrest|訴訟|凍結|停止|逮捕|法的措置|閉鎖/;
@@ -186,6 +197,7 @@ function signals(text, ex) {
     has_url: hasUrl,
     domain_unknown: domainUnknown,
     has_shortener: ex.has_shortener,
+    has_delivery_or_market_spoof: hasDeliveryOrMarketSpoof,
 
     has_threat: hasThreat,
     has_time_limit_phrase: hasTimeLimitPhrase,
