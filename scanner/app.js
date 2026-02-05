@@ -56,13 +56,13 @@ function signals(text, ex) {
 
   // OTP/2FA code sharing request (phishing)
   const otpShareRe =
-    /(\b(reply|send|share|tell)\b|返信|送って|送信して|教えて|共有して).{0,40}(\b(otp|2fa|verification\s?code|security\s?code|auth(entication)?\s?code|one[-\s]?time\s?code)\b|認証コード|確認コード|セキュリティコード|ワンタイムコード|ワンタイムパス)|(\b(otp|2fa|verification\s?code|security\s?code|auth(entication)?\s?code|one[-\s]?time\s?code)\b|認証コード|確認コード|セキュリティコード|ワンタイムコード|ワンタイムパス).{0,40}(\b(reply|send|share|tell)\b|返信|送って|送信して|教えて|共有して)/;
+    /(\b(reply|send|share|tell|give|provide)\b|返信|送って|送信して|教えて|共有して).{0,40}(\b(otp|2fa|verification\s?code|security\s?code|auth(entication)?\s?code|one[-\s]?time\s?(code|password)|\d{4,8}[-\s]?digit\s+code)\b|認証コード|確認コード|セキュリティコード|ワンタイムコード|ワンタイムパス)|(\b(otp|2fa|verification\s?code|security\s?code|auth(entication)?\s?code|one[-\s]?time\s?(code|password)|\d{4,8}[-\s]?digit\s+code)\b|認証コード|確認コード|セキュリティコード|ワンタイムコード|ワンタイムパス).{0,40}(\b(reply|send|share|tell|give|provide)\b|返信|送って|送信して|教えて|共有して)/;
   const asksOtpShare = otpShareRe.test(t);
   /*
     Manual tests (OTP share):
-    1) "Reply with the verification code you just received." => BLOCK
-    2) "このSMSの認証コードを返信して" => BLOCK
-    3) "Enter the code on the official site/app to continue." => PASS
+    A) "Support team here. Reply with the 6-digit verification code you just received." => BLOCK
+    B) "This code is for you. Do not share it. Enter it on the official app/site." => PASS (or DELAY only if URL present)
+    C) "Send me your 2FA code to verify your account." => BLOCK
   */
 
   // signature / approval (crypto-style)
