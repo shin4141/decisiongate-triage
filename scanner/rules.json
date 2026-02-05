@@ -69,6 +69,12 @@
       "evidence": ["sig:shortener", "sig:high_stakes"]
     },
     {
+      "id": "gift_card_request",
+      "if": ["asks_gift_card"],
+      "severity": "BLOCK",
+      "evidence": ["sig:gift_card"]
+    },
+    {
       "id": "unknown_domain",
       "if": ["has_url", "domain_unknown"],
       "severity": "DELAY",

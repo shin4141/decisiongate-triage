@@ -104,6 +104,28 @@ function signals(text, ex) {
     /\b(pay|payment|send|transfer|wire|remit|deposit|withdraw)\b|支払|送金|振込|振り込|振り込み|入金|出金/;
   const asksPaymentOrTransfer = payTransferRe.test(t);
 
+  // gift card request
+  const giftActionRe =
+    /\b(buy|purchase|get|send|provide)\b|買って|購入|送って|教えて/i;
+  const giftNounRe =
+    /(gift\s?card|giftcard|itunes\s?card|apple\s?gift\s?card|google\s?play\s?card|amazon\s?gift\s?card|steam\s?card|ギフトカード|ギフト券|プリペイド|電子マネー|itunesカード|apple\s?gift\s?card|google\s?playカード|amazonギフト|appleカード|steamカード)/i;
+  const giftCodeRe = /\b(gift\s?card\s?(code|pin)|code|pin)\b|コード|番号|pin/i;
+  const giftActionThenNounRe = new RegExp(`${giftActionRe.source}[\\s\\S]{0,60}${giftNounRe.source}`, "i");
+  const giftNounThenActionRe = new RegExp(`${giftNounRe.source}[\\s\\S]{0,60}${giftActionRe.source}`, "i");
+  const giftNounThenCodeRe = new RegExp(`${giftNounRe.source}[\\s\\S]{0,40}${giftCodeRe.source}`, "i");
+  const giftCodeThenNounRe = new RegExp(`${giftCodeRe.source}[\\s\\S]{0,40}${giftNounRe.source}`, "i");
+  const asksGiftCard =
+    giftActionThenNounRe.test(t) ||
+    giftNounThenActionRe.test(t) ||
+    giftNounThenCodeRe.test(t) ||
+    giftCodeThenNounRe.test(t);
+  /*
+    Manual tests (gift card):
+    A) "iTunesカード買って番号送って" => BLOCK
+    B) "Please buy an Amazon gift card and send me the code." => BLOCK
+    C) "ギフトカードの話題（雑談）だよ" => PASS
+  */
+
   // delivery / flea-market spoof
   const deliveryMarketRe =
     /(ヤマト|佐川|日本郵便|ゆうパック|不在|再配達|配達|荷物|追跡|伝票|お届け|住所確認|関税|メルカリ|ラクマ|PayPayフリマ|購入|発送|受取|取引|delivery|parcel|shipment|reschedule|failed delivery|customs|tracking|waybill)/i;
@@ -268,6 +290,7 @@ function signals(text, ex) {
     has_url: hasUrl,
     domain_unknown: domainUnknown,
     has_shortener: ex.has_shortener,
+    asks_gift_card: asksGiftCard,
     has_delivery_or_market_spoof: hasDeliveryOrMarketSpoof,
     has_payment_refund_scam: hasPaymentRefundScam,
     has_prize_or_grant_scam: hasPrizeOrGrantScam,
