@@ -293,7 +293,8 @@ function signals(text, ex) {
     no_links: !hasUrl,
     no_money: !hasMoney,
     no_secret_request: !asksSecretSeedKey && !asksOtpShare && !asksSignatureOrApproval && !asksPaymentOrTransfer,
-    no_threat: !hasThreat
+    no_threat: !hasThreat,
+    no_guaranteed_profit_claim: !hasGuaranteedProfitClaim
   };
 }
 

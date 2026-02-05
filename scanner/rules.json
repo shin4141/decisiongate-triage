@@ -226,7 +226,7 @@
     },
     {
       "id": "safe_pattern",
-      "if": ["no_links", "no_money", "no_secret_request", "no_threat"],
+      "if": ["no_links", "no_money", "no_secret_request", "no_threat", "no_guaranteed_profit_claim"],
       "severity": "PASS",
       "evidence": ["sig:low_risk_surface"]
     }
