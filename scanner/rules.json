@@ -123,6 +123,30 @@
       "evidence": ["sig:prize_grant", "sig:fee_tax"]
     },
     {
+      "id": "family_emergency_link",
+      "if": ["has_family_emergency_scam", "has_url"],
+      "severity": "DELAY",
+      "evidence": ["sig:family_emergency", "sig:url"]
+    },
+    {
+      "id": "family_emergency_no_url",
+      "if": ["has_family_emergency_scam"],
+      "severity": "DELAY",
+      "evidence": ["sig:family_emergency"]
+    },
+    {
+      "id": "family_emergency_money_or_transfer",
+      "if": ["has_family_emergency_scam", "has_money"],
+      "severity": "BLOCK",
+      "evidence": ["sig:family_emergency", "sig:money"]
+    },
+    {
+      "id": "family_emergency_high_stakes",
+      "if": ["has_family_emergency_scam", "high_stakes"],
+      "severity": "BLOCK",
+      "evidence": ["sig:family_emergency", "sig:high_stakes"]
+    },
+    {
       "id": "attachment_executable_or_macro",
       "if": ["has_executable_or_macro_attachment"],
       "severity": "BLOCK",

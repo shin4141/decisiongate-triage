@@ -140,6 +140,20 @@ function signals(text, ex) {
     C) "You've won a prize. Login to claim: https://example.com/login" => BLOCK
   */
 
+  // family emergency / impersonation scam
+  const familyRe =
+    /(母|父|娘|息子|家族|叔父|叔母|親|兄|姉|弟|妹|hi mom|hi mum|mom|dad)/i;
+  const emergencyRe =
+    /(緊急|助けて|今すぐ|事故|病院|弁護士|警察|携帯壊れた|新しい番号|この番号に連絡|line追加|番号変わった|emergency|help me|accident|hospital|lawyer|police|new number|phone broken)/i;
+  const hasFamilyEmergencyScam =
+    (/\bhi (mom|mum)\b/i.test(t)) || (familyRe.test(t) && emergencyRe.test(t));
+  /*
+    Manual tests (family emergency):
+    A) "母さん、携帯壊れた。新しい番号だよ。" => DELAY
+    B) "今すぐ振り込んで。事故で入院してる。" => BLOCK
+    C) "Hi mum, my phone is broken. Save my new number." => DELAY
+  */
+
   // threats / time limit
   const threatRe =
     /account will be closed|suspended|legal action|police|arrest|訴訟|凍結|停止|逮捕|法的措置|閉鎖/;
@@ -226,6 +240,7 @@ function signals(text, ex) {
     has_payment_refund_scam: hasPaymentRefundScam,
     has_prize_or_grant_scam: hasPrizeOrGrantScam,
     has_money_or_fee_terms: hasMoneyOrFeeTerms,
+    has_family_emergency_scam: hasFamilyEmergencyScam,
 
     has_threat: hasThreat,
     has_time_limit_phrase: hasTimeLimitPhrase,
