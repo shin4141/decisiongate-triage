@@ -153,6 +153,12 @@
       "evidence": ["sig:family_emergency", "sig:high_stakes"]
     },
     {
+      "id": "police_legal_base",
+      "if": ["has_police_legal_threat"],
+      "severity": "DELAY",
+      "evidence": ["sig:police_legal"]
+    },
+    {
       "id": "police_legal_link",
       "if": ["has_police_legal_threat", "has_url"],
       "severity": "DELAY",
@@ -165,10 +171,10 @@
       "evidence": ["sig:police_legal", "sig:high_stakes"]
     },
     {
-      "id": "police_legal_threat_language",
-      "if": ["has_police_legal_threat", "has_threat"],
+      "id": "police_legal_threat_with_url",
+      "if": ["has_police_legal_threat", "has_threat", "has_url"],
       "severity": "BLOCK",
-      "evidence": ["sig:police_legal", "sig:threat"]
+      "evidence": ["sig:police_legal", "sig:threat", "sig:url"]
     },
     {
       "id": "attachment_executable_or_macro",
