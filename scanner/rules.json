@@ -195,6 +195,12 @@
       "evidence": ["sig:investment_hustle", "sig:payment_or_transfer"]
     },
     {
+      "id": "guaranteed_profit_claim",
+      "if": ["has_guaranteed_profit_claim"],
+      "severity": "DELAY",
+      "evidence": ["sig:guaranteed_profit"]
+    },
+    {
       "id": "attachment_executable_or_macro",
       "if": ["has_executable_or_macro_attachment"],
       "severity": "BLOCK",

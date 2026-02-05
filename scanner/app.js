@@ -176,6 +176,16 @@ function signals(text, ex) {
     C) "AI trading group. Send a deposit now." => BLOCK
   */
 
+  // guaranteed profit marketing claim (delay-only)
+  const guaranteedProfitRe =
+    /(絶対儲かる|確実に儲かる|元本保証|損しない|必ず勝てる|100%|guaranteed returns|risk[-\s]?free|no loss|100%\s*profit|sure win)/i;
+  const hasGuaranteedProfitClaim = guaranteedProfitRe.test(t);
+  /*
+    Manual tests (guaranteed profit):
+    A) "絶対儲かる投資です！" => DELAY
+    B) "Guaranteed returns. Join our group." => DELAY
+  */
+
   // threats / time limit
   const threatRe =
     /account will be closed|suspended|legal action|police|arrest|訴訟|凍結|停止|逮捕|法的措置|閉鎖/;
@@ -265,6 +275,7 @@ function signals(text, ex) {
     has_family_emergency_scam: hasFamilyEmergencyScam,
     has_police_legal_threat: hasPoliceLegalThreat,
     has_investment_hustle_scam: hasInvestmentHustleScam,
+    has_guaranteed_profit_claim: hasGuaranteedProfitClaim,
 
     has_threat: hasThreat,
     has_time_limit_phrase: hasTimeLimitPhrase,
