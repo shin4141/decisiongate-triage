@@ -9,6 +9,12 @@
       "evidence": ["sig:secret_seed_key"]
     },
     {
+      "id": "otp_2fa_code_share",
+      "if": ["asks_otp_share"],
+      "severity": "BLOCK",
+      "evidence": ["sig:otp_share"]
+    },
+    {
       "id": "signature_or_approval_request",
       "if": ["asks_signature_or_approval"],
       "severity": "BLOCK",
@@ -100,5 +106,4 @@
     }
   ]
 }
-
 

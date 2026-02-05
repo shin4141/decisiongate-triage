@@ -54,6 +54,17 @@ function signals(text, ex) {
     /\b(password|passcode|2fa|otp|seed|seed\s?phrase|recovery\s?phrase|mnemonic|secret\s?key|private\s?key)\b|パスワード|シード|秘密鍵|復元フレーズ/;
   const asksSecretSeedKey = secretSeedKeyRe.test(t);
 
+  // OTP/2FA code sharing request (phishing)
+  const otpShareRe =
+    /(\b(reply|send|share|tell)\b|返信|送って|送信して|教えて|共有して).{0,40}(\b(otp|2fa|verification\s?code|security\s?code|auth(entication)?\s?code|one[-\s]?time\s?code)\b|認証コード|確認コード|セキュリティコード|ワンタイムコード|ワンタイムパス)|(\b(otp|2fa|verification\s?code|security\s?code|auth(entication)?\s?code|one[-\s]?time\s?code)\b|認証コード|確認コード|セキュリティコード|ワンタイムコード|ワンタイムパス).{0,40}(\b(reply|send|share|tell)\b|返信|送って|送信して|教えて|共有して)/;
+  const asksOtpShare = otpShareRe.test(t);
+  /*
+    Manual tests (OTP share):
+    1) "Reply with the verification code you just received." => BLOCK
+    2) "このSMSの認証コードを返信して" => BLOCK
+    3) "Enter the code on the official site/app to continue." => PASS
+  */
+
   // signature / approval (crypto-style)
   const sigApproveRe =
     /\b(sign|signature|approve|approval|authorize|confirm|verify wallet|connect wallet)\b|署名|承認|接続|ウォレット/;
@@ -137,6 +148,7 @@ function signals(text, ex) {
     asks_login: asksLogin,
 
     asks_secret_or_seed_or_private_key_or_mnemonic: asksSecretSeedKey,
+    asks_otp_share: asksOtpShare,
     asks_signature_or_approval: asksSignatureOrApproval,
     asks_payment_or_transfer: asksPaymentOrTransfer,
     has_executable_or_macro_attachment: hasExecutableOrMacroAttachment,
@@ -160,7 +172,7 @@ function signals(text, ex) {
     // safe_pattern helpers (v0.2-general expects these names)
     no_links: !hasUrl,
     no_money: !hasMoney,
-    no_secret_request: !asksSecretSeedKey && !asksSignatureOrApproval && !asksPaymentOrTransfer,
+    no_secret_request: !asksSecretSeedKey && !asksOtpShare && !asksSignatureOrApproval && !asksPaymentOrTransfer,
     no_threat: !hasThreat
   };
 }
