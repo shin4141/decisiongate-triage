@@ -361,6 +361,7 @@ function buildCard(text, rulesJson) {
       short: shareShort,
       family_one_liner: `Gate=${severity}. Pause. Verify via search links before any payment/login/approval.`
     },
+    debug_signals: sig,
     deepcheck: { status: "not_run", sources: [], evidence_add: [] }
   };
 
