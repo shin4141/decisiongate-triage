@@ -101,7 +101,7 @@ function signals(text, ex) {
 
   // payment/transfer direct ask (separate from "money words")
   const payTransferRe =
-    /\b(pay|payment|send|transfer|wire|remit|deposit|withdraw)\b|支払|送金|振込|入金|出金/;
+    /\b(pay|payment|send|transfer|wire|remit|deposit|withdraw)\b|支払|送金|振込|振り込|振り込み|入金|出金/;
   const asksPaymentOrTransfer = payTransferRe.test(t);
 
   // delivery / flea-market spoof
