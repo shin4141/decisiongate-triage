@@ -69,6 +69,24 @@ function signals(text, ex) {
     2) "Support: reply with the 6-digit code." => BLOCK
     3) "Do not share this code. Enter it on the official app/site." => PASS (no URL)
   */
+
+  // KYC/ID/selfie sharing request (phishing)
+  const kycShareVerbRe = /\b(reply|send|share|tell|forward|give|attach)\b|返信して|送って|送信して|教えて|共有して|添付して/i;
+  const kycUploadVerbRe = /\bupload\b|アップロード/;
+  const kycNounRe =
+    /\b(id|identity|passport|driver'?s license|license|selfie|address|insurance)\b|マイナンバー|身分証|免許証|パスポート|セルフィー|顔写真|住所|保険証/i;
+  const kycActionThenNounRe = new RegExp(`${kycShareVerbRe.source}[\\s\\S]{0,80}${kycNounRe.source}`, "i");
+  const kycNounThenActionRe = new RegExp(`${kycNounRe.source}[\\s\\S]{0,80}${kycShareVerbRe.source}`, "i");
+  const kycHasShareVerb = kycShareVerbRe.test(t);
+  const kycUploadOfficial = kycUploadVerbRe.test(t) && /\b(official|app|site)\b/i.test(t);
+  let asksKycShare = kycActionThenNounRe.test(t) || kycNounThenActionRe.test(t);
+  if (kycUploadOfficial && !kycHasShareVerb) asksKycShare = false;
+  /*
+    Manual tests (KYC share):
+    A) "本人確認のため、身分証とセルフィーをこのDMに送ってください。" => BLOCK
+    B) "Please send your ID and a selfie to verify your account." => BLOCK
+    C) "Upload your ID on the official website to complete verification." => PASS (or DELAY only if URL present)
+  */
   /*
     Manual tests (OTP share):
     A) "Support team here. Reply with the 6-digit verification code you just received." => BLOCK
@@ -160,6 +178,7 @@ function signals(text, ex) {
 
     asks_secret_or_seed_or_private_key_or_mnemonic: asksSecretSeedKey,
     asks_otp_share: asksOtpShare,
+    asks_kyc_share: asksKycShare,
     asks_signature_or_approval: asksSignatureOrApproval,
     asks_payment_or_transfer: asksPaymentOrTransfer,
     has_executable_or_macro_attachment: hasExecutableOrMacroAttachment,

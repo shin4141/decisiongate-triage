@@ -15,6 +15,12 @@
       "evidence": ["sig:otp_share"]
     },
     {
+      "id": "kyc_id_selfie_share",
+      "if": ["asks_kyc_share"],
+      "severity": "BLOCK",
+      "evidence": ["sig:kyc_share"]
+    },
+    {
       "id": "signature_or_approval_request",
       "if": ["asks_signature_or_approval"],
       "severity": "BLOCK",
@@ -106,4 +112,3 @@
     }
   ]
 }
-
