@@ -385,11 +385,10 @@ async function main() {
   const counts = $("counts");
   const status = $("status");
 
-  const rules = await loadRules();
-
-  $("run").onclick = () => {
+  $("run").onclick = async () => {
     const text = input.value || "";
-    const card = buildCard(text, rules);
+    const rulesNow = await loadRules();
+    const card = buildCard(text, rulesNow);
     out.textContent = pretty(card);
     gate.textContent = card.gate.severity;
     gate.classList.remove("pass", "delay", "block");
@@ -411,10 +410,6 @@ share.innerHTML =
   `${card.share_report.short}<br><br>` +
   `Search:<br>` +
   (card.search.queries || []).map(q => mk(q.label, q.q)).join("<br>");
-
-      `${card.share_report.short}\n\n` +
-      `Search:\n` +
-      (card.search.queries || []).map(q => `- ${q.label}: ${q.q}`).join("\n");
     status.textContent = `Done. severity=${card.gate.severity}`;
   };
 
