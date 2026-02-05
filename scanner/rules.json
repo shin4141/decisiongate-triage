@@ -153,6 +153,24 @@
       "evidence": ["sig:family_emergency", "sig:high_stakes"]
     },
     {
+      "id": "police_legal_link",
+      "if": ["has_police_legal_threat", "has_url"],
+      "severity": "DELAY",
+      "evidence": ["sig:police_legal", "sig:url"]
+    },
+    {
+      "id": "police_legal_high_stakes",
+      "if": ["has_police_legal_threat", "high_stakes"],
+      "severity": "BLOCK",
+      "evidence": ["sig:police_legal", "sig:high_stakes"]
+    },
+    {
+      "id": "police_legal_threat_language",
+      "if": ["has_police_legal_threat", "has_threat"],
+      "severity": "BLOCK",
+      "evidence": ["sig:police_legal", "sig:threat"]
+    },
+    {
       "id": "attachment_executable_or_macro",
       "if": ["has_executable_or_macro_attachment"],
       "severity": "BLOCK",

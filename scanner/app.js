@@ -154,6 +154,17 @@ function signals(text, ex) {
     C) "Hi mum, my phone is broken. Save my new number." => DELAY
   */
 
+  // police / legal threat scam
+  const policeLegalRe =
+    /(警察|刑事|捜査|逮捕|容疑|口座凍結|差し押さえ|訴訟|裁判所|支払命令|未納|督促|罰金|police|detective|arrest|warrant|lawsuit|court|subpoena|legal action|frozen account|seizure|penalty|fine)/i;
+  const hasPoliceLegalThreat = policeLegalRe.test(t);
+  /*
+    Manual tests (police/legal):
+    A) "警察です。あなたの口座が凍結されます。至急連絡してください。" => DELAY or BLOCK (prefer BLOCK if has_threat triggers)
+    B) "裁判所からの通知。ログインして確認：https://example.com/login" => BLOCK
+    C) "Police notice: pay a fine now or face arrest. https://example.com" => BLOCK
+  */
+
   // threats / time limit
   const threatRe =
     /account will be closed|suspended|legal action|police|arrest|訴訟|凍結|停止|逮捕|法的措置|閉鎖/;
@@ -241,6 +252,7 @@ function signals(text, ex) {
     has_prize_or_grant_scam: hasPrizeOrGrantScam,
     has_money_or_fee_terms: hasMoneyOrFeeTerms,
     has_family_emergency_scam: hasFamilyEmergencyScam,
+    has_police_legal_threat: hasPoliceLegalThreat,
 
     has_threat: hasThreat,
     has_time_limit_phrase: hasTimeLimitPhrase,
