@@ -482,13 +482,22 @@ async function main() {
   const parseExamples = (md) => {
     const lines = md.split(/\r?\n/);
     const examples = [];
-    let expected = null;
+    let pendingExpected = null;
+    let pendingInput = null;
     let inBlock = false;
     let buf = [];
+    const flush = () => {
+      if (pendingExpected && pendingInput) {
+        examples.push({ input: pendingInput, expectedGate: pendingExpected });
+        pendingExpected = null;
+        pendingInput = null;
+      }
+    };
     for (const line of lines) {
-      const m = line.match(/^\*\*Expected Gate:\*\*\s*(PASS|DELAY|BLOCK)\s*$/);
+      const m = line.match(/^(?:\*\*Expected Gate:\*\*|Expected Gate:|Expected:)\s*(PASS|DELAY|BLOCK)\s*$/);
       if (m) {
-        expected = m[1];
+        pendingExpected = m[1];
+        flush();
         continue;
       }
       if (line.startsWith("```")) {
@@ -498,10 +507,8 @@ async function main() {
         } else {
           inBlock = false;
           const input = buf.join("\n").trim();
-          if (expected && input) {
-            examples.push({ input, expectedGate: expected });
-          }
-          expected = null;
+          if (input) pendingInput = input;
+          flush();
         }
         continue;
       }
