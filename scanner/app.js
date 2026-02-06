@@ -467,7 +467,8 @@ async function main() {
     const card = buildCard(text, rulesNow);
     lastCard = card;
     out.textContent = pretty(card);
-    gate.textContent = card.gate.severity;
+    const gateLabelMap = { PASS: "⚪ NO SIGNAL", DELAY: "⏸ DELAY", BLOCK: "🚫 BLOCK" };
+    gate.textContent = gateLabelMap[card.gate.severity] || card.gate.severity;
     gate.classList.remove("pass", "delay", "block");
     const sev = String(card.gate.severity || "").toLowerCase();
     if (sev) gate.classList.add(sev);
