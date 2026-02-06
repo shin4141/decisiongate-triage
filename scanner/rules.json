@@ -87,6 +87,12 @@
       "evidence": ["sig:fake_support_scam"]
     },
     {
+      "id": "mistaken_report_urgent",
+      "if": ["has_mistaken_report_urgent"],
+      "severity": "DELAY",
+      "evidence": ["sig:mistaken_report_urgent"]
+    },
+    {
       "id": "secrecy_plus_high_stakes",
       "if": ["has_secrecy_request", "high_stakes"],
       "severity": "BLOCK",

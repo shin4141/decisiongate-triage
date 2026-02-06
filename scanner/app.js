@@ -205,6 +205,11 @@ function signals(text, ex) {
     (reportMistakeRe.test(t) && cooperateRe.test(t) && externalContactRe.test(t)) ||
     discordIdRe.test(t);
 
+  // mistaken report + urgent cooperation (no URL)
+  const mistakenReportRe = /(誤って通報|間違えて通報|誤通報|報告してしまった|大量通報)/i;
+  const urgentCoopRe = /(至急|急いで|すぐに|協力して|手伝って)/i;
+  const hasMistakenReportUrgent = mistakenReportRe.test(t) && urgentCoopRe.test(t);
+
   // investment / side-hustle scam
   const investmentHustleRe =
     /(投資|副業|不労所得|高利回り|確実に儲かる|元本保証|月利|日利|利益保証|先出し|自動売買|AI投資|シグナル配信|コピトレ|紹介|招待|限定枠|line追加|オープンチャット|こっちのリンク|コミュニティ参加|investment|passive income|guaranteed returns|risk[-\s]?free|high yield|daily profit|copy trading|signals|ai trading|exclusive group|invite)/i;
@@ -317,6 +322,7 @@ function signals(text, ex) {
     has_family_emergency_scam: hasFamilyEmergencyScam,
     has_police_legal_threat: hasPoliceLegalThreat,
     has_fake_platform_support_scam: hasFakePlatformSupportScam,
+    has_mistaken_report_urgent: hasMistakenReportUrgent,
     has_investment_hustle_scam: hasInvestmentHustleScam,
     has_guaranteed_profit_claim: hasGuaranteedProfitClaim,
 
