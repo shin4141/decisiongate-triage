@@ -193,6 +193,18 @@ function signals(text, ex) {
     C) "Police notice: pay a fine now or face arrest. https://example.com" => BLOCK
   */
 
+  // fake platform support / report mistake scam
+  const platformSupportRe = /(x\s*technical\s*support|x\s*support|xサポート|サポート|support)/i;
+  const platformThreatRe = /(停止|凍結|ipブロック|アカウント削除|24時間|suspend|suspended|delete|deactivated)/i;
+  const reportMistakeRe = /(誤って通報|大量に通報|間違えて報告|誤報|false report|reported by mistake)/i;
+  const cooperateRe = /(協力|説明して|help me|assist|explain)/i;
+  const externalContactRe = /(discord|telegram|line|外部連絡|別のアカウント|dm|連絡して)/i;
+  const discordIdRe = /\bdiscord\s*id\s*[:：]/i;
+  const hasFakePlatformSupportScam =
+    (platformSupportRe.test(t) && platformThreatRe.test(t)) ||
+    (reportMistakeRe.test(t) && cooperateRe.test(t) && externalContactRe.test(t)) ||
+    discordIdRe.test(t);
+
   // investment / side-hustle scam
   const investmentHustleRe =
     /(投資|副業|不労所得|高利回り|確実に儲かる|元本保証|月利|日利|利益保証|先出し|自動売買|AI投資|シグナル配信|コピトレ|紹介|招待|限定枠|line追加|オープンチャット|こっちのリンク|コミュニティ参加|investment|passive income|guaranteed returns|risk[-\s]?free|high yield|daily profit|copy trading|signals|ai trading|exclusive group|invite)/i;
@@ -304,6 +316,7 @@ function signals(text, ex) {
     has_money_or_fee_terms: hasMoneyOrFeeTerms,
     has_family_emergency_scam: hasFamilyEmergencyScam,
     has_police_legal_threat: hasPoliceLegalThreat,
+    has_fake_platform_support_scam: hasFakePlatformSupportScam,
     has_investment_hustle_scam: hasInvestmentHustleScam,
     has_guaranteed_profit_claim: hasGuaranteedProfitClaim,
 

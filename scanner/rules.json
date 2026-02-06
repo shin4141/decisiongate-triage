@@ -81,6 +81,12 @@
       "evidence": ["sig:gift_card"]
     },
     {
+      "id": "fake_platform_support_scam",
+      "if": ["has_fake_platform_support_scam"],
+      "severity": "BLOCK",
+      "evidence": ["sig:fake_support_scam"]
+    },
+    {
       "id": "secrecy_plus_high_stakes",
       "if": ["has_secrecy_request", "high_stakes"],
       "severity": "BLOCK",
