@@ -424,9 +424,22 @@ async function main() {
   const status = $("status");
 
   let lastCard = null;
-  const copyText = async (text) => {
+  const flashButton = (btn, ok = true) => {
+    if (!btn) return;
+    const original = btn.textContent;
+    btn.textContent = ok ? "Copied!" : "Copy failed";
+    btn.classList.toggle("copied", ok);
+    btn.classList.toggle("failed", !ok);
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove("copied", "failed");
+    }, 1200);
+  };
+
+  const copyText = async (text, btn) => {
     if (!text) {
       status.textContent = "Copy failed";
+      flashButton(btn, false);
       return;
     }
     try {
@@ -436,9 +449,11 @@ async function main() {
         prompt("Copy:", text);
       }
       status.textContent = "Copied";
+      flashButton(btn, true);
     } catch {
       prompt("Copy:", text);
       status.textContent = "Copy failed";
+      flashButton(btn, false);
     }
   };
 
@@ -447,7 +462,7 @@ async function main() {
       status.textContent = "Run analysis first";
       return;
     }
-    copyText(lastCard.share_report.family_one_liner || "");
+    copyText(lastCard.share_report.family_one_liner || "", copyQuick);
   };
   copyReport.onclick = () => {
     if (!lastCard) {
@@ -458,12 +473,47 @@ async function main() {
       `${lastCard.share_report.short}\n\n` +
       `Search:\n` +
       (lastCard.search.queries || []).map(q => `- ${q.label}: ${q.q}`).join("\n");
-    copyText(reportText);
+    copyText(reportText, copyReport);
   };
 
   $("run").onclick = async () => {
     const text = input.value || "";
-    const rulesNow = await loadRules();
+    let rulesNow = null;
+    try {
+      rulesNow = await loadRules();
+    } catch (err) {
+      const errorCard = {
+        id: nowId(),
+        summary_1l: "Rules not loaded. Delaying decision.",
+        intent: "",
+        asks: [],
+        risk_factors: [],
+        extracted: { urls: [], emails: [], phones: [], handles: [], dates: [], money: [] },
+        gate: { severity: "DELAY", until_iso: null, reasons: ["rule:rules_not_loaded"], evidence: [] },
+        search: { queries: [] },
+        share_report: {
+          short: "ERROR: rules.json not loaded. Please refresh or retry.",
+          family_one_liner: "ERROR: rules.json not loaded."
+        },
+        debug_signals: {},
+        deepcheck: { status: "not_run", sources: [], evidence_add: [] }
+      };
+      lastCard = errorCard;
+      out.textContent = pretty(errorCard);
+      gate.textContent = "⏸ DELAY";
+      gate.classList.remove("pass", "delay", "block");
+      gate.classList.add("delay");
+      reasons.textContent = errorCard.gate.reasons.join(", ");
+      counts.textContent = "URLs=0, Emails=0, Phones=0";
+      share.innerHTML = `${errorCard.share_report.short}`;
+      quickShareText.textContent = errorCard.share_report.family_one_liner;
+      status.textContent = "Warning: rules.json not loaded";
+      return;
+    }
+    if (!rulesNow) {
+      status.textContent = "Warning: rules.json not loaded";
+      return;
+    }
     const card = buildCard(text, rulesNow);
     lastCard = card;
     out.textContent = pretty(card);
