@@ -93,9 +93,10 @@ You won a prize. Login to claim: https://example.com/login
 
 ## Family Emergency (DELAY or BLOCK)
 
-**Expected Gate:** DELAY
-```
+```text
 母さん、携帯壊れた。新しい番号だよ。
+
+Expected: DELAY
 ```
 
 **Expected Gate:** BLOCK
@@ -174,4 +175,12 @@ Please buy an Amazon gift card and send me the code.
 **Expected Gate:** BLOCK
 ```
 Amazonギフトカードのコードを教えて。
+```
+
+## Mistaken Report Urgent (DELAY)
+
+```text
+誤って通報してしまいました。至急協力してください。（URLなし／Discordなし）
+
+Expected: DELAY
 ```
