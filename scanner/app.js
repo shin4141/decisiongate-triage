@@ -408,6 +408,7 @@ async function main() {
   const counts = $("counts");
   const copyQuick = $("copy-quick");
   const copyReport = $("copy-report");
+  const quickShareText = $("quick-share-text");
   const status = $("status");
 
   let lastQuickShare = "";
@@ -455,6 +456,7 @@ share.innerHTML =
   `Search:<br>` +
   (card.search.queries || []).map(q => mk(q.label, q.q)).join("<br>");
     lastQuickShare = card.share_report.family_one_liner || "";
+    quickShareText.textContent = lastQuickShare || "—";
     lastReportShare =
       `${card.share_report.short}\n\n` +
       `Search:\n` +
@@ -468,6 +470,7 @@ share.innerHTML =
     share.textContent = "";
     lastQuickShare = "";
     lastReportShare = "";
+    quickShareText.textContent = "—";
     gate.textContent = "—";
     gate.classList.remove("pass", "delay", "block");
     reasons.textContent = "—";
