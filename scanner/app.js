@@ -411,29 +411,49 @@ async function main() {
   const quickShareText = $("quick-share-text");
   const status = $("status");
 
-  let lastQuickShare = "";
-  let lastReportShare = "";
+  let lastCard = null;
   const copyText = async (text) => {
-    if (!text) return;
+    if (!text) {
+      status.textContent = "Copy failed";
+      return;
+    }
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(text);
       } else {
-        prompt("Copy to clipboard:", text);
+        prompt("Copy:", text);
       }
       status.textContent = "Copied";
     } catch {
-      prompt("Copy to clipboard:", text);
+      prompt("Copy:", text);
+      status.textContent = "Copy failed";
     }
   };
 
-  copyQuick.onclick = () => copyText(lastQuickShare);
-  copyReport.onclick = () => copyText(lastReportShare);
+  copyQuick.onclick = () => {
+    if (!lastCard) {
+      status.textContent = "Run analysis first";
+      return;
+    }
+    copyText(lastCard.share_report.family_one_liner || "");
+  };
+  copyReport.onclick = () => {
+    if (!lastCard) {
+      status.textContent = "Run analysis first";
+      return;
+    }
+    const reportText =
+      `${lastCard.share_report.short}\n\n` +
+      `Search:\n` +
+      (lastCard.search.queries || []).map(q => `- ${q.label}: ${q.q}`).join("\n");
+    copyText(reportText);
+  };
 
   $("run").onclick = async () => {
     const text = input.value || "";
     const rulesNow = await loadRules();
     const card = buildCard(text, rulesNow);
+    lastCard = card;
     out.textContent = pretty(card);
     gate.textContent = card.gate.severity;
     gate.classList.remove("pass", "delay", "block");
@@ -455,12 +475,7 @@ share.innerHTML =
   `${card.share_report.short}<br><br>` +
   `Search:<br>` +
   (card.search.queries || []).map(q => mk(q.label, q.q)).join("<br>");
-    lastQuickShare = card.share_report.family_one_liner || "";
-    quickShareText.textContent = lastQuickShare || "—";
-    lastReportShare =
-      `${card.share_report.short}\n\n` +
-      `Search:\n` +
-      (card.search.queries || []).map(q => `- ${q.label}: ${q.q}`).join("\n");
+    quickShareText.textContent = card.share_report.family_one_liner || "—";
     status.textContent = `Done. severity=${card.gate.severity}`;
   };
 
@@ -468,8 +483,7 @@ share.innerHTML =
     input.value = "";
     out.textContent = "{}";
     share.textContent = "";
-    lastQuickShare = "";
-    lastReportShare = "";
+    lastCard = null;
     quickShareText.textContent = "—";
     gate.textContent = "—";
     gate.classList.remove("pass", "delay", "block");
