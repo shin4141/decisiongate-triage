@@ -421,6 +421,9 @@ async function main() {
   const copyQuick = $("copy-quick");
   const copyReport = $("copy-report");
   const quickShareText = $("quick-share-text");
+  const runSamples = $("run-samples");
+  const samplesOut = $("samples");
+  const samplesWrap = $("samples-wrap");
   const status = $("status");
 
   let lastCard = null;
@@ -474,6 +477,68 @@ async function main() {
       `Search:\n` +
       (lastCard.search.queries || []).map(q => `- ${q.label}: ${q.q}`).join("\n");
     copyText(reportText, copyReport);
+  };
+
+  const parseExamples = (md) => {
+    const lines = md.split(/\r?\n/);
+    const examples = [];
+    let expected = null;
+    let inBlock = false;
+    let buf = [];
+    for (const line of lines) {
+      const m = line.match(/^\*\*Expected Gate:\*\*\s*(PASS|DELAY|BLOCK)\s*$/);
+      if (m) {
+        expected = m[1];
+        continue;
+      }
+      if (line.startsWith("```")) {
+        if (!inBlock) {
+          inBlock = true;
+          buf = [];
+        } else {
+          inBlock = false;
+          const input = buf.join("\n").trim();
+          if (expected && input) {
+            examples.push({ input, expectedGate: expected });
+          }
+          expected = null;
+        }
+        continue;
+      }
+      if (inBlock) buf.push(line);
+    }
+    return examples;
+  };
+
+  runSamples.onclick = async () => {
+    status.textContent = "Running samples...";
+    samplesOut.textContent = "";
+    if (samplesWrap) samplesWrap.open = true;
+    let rulesNow = null;
+    try {
+      rulesNow = await loadRules();
+      const res = await fetch("./EXAMPLES.md", { cache: "no-store" });
+      if (!res.ok) throw new Error("EXAMPLES.md not found");
+      const md = await res.text();
+      const examples = parseExamples(md);
+      const rows = [];
+      let mismatches = 0;
+      for (const ex of examples) {
+        const card = buildCard(ex.input, rulesNow);
+        const got = card.gate.severity;
+        const ok = got === ex.expectedGate;
+        if (!ok) mismatches += 1;
+        if (!ok) {
+          const oneLine = ex.input.replace(/\s+/g, " ").slice(0, 80);
+          rows.push(`[✗] ${oneLine} -> ${got} (expected ${ex.expectedGate})`);
+        }
+      }
+      samplesOut.textContent = rows.length ? rows.join("\n") : "All samples match expected gates.";
+      samplesOut.classList.toggle("samples-bad", rows.length > 0);
+      status.textContent = mismatches ? `Samples: ${mismatches} mismatch(es)` : "Samples: all pass";
+    } catch (err) {
+      status.textContent = `Samples error: ${err.message}`;
+    }
   };
 
   $("run").onclick = async () => {
