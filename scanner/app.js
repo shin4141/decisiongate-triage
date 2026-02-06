@@ -106,19 +106,14 @@ function signals(text, ex) {
 
   // gift card request
   const giftActionRe =
-    /\b(buy|purchase|get|send|provide)\b|買って|購入|送って|教えて/i;
+    /\b(buy|purchase|get|send|provide|code|pin)\b|買って|購入|送って|教えて|コード|pin/i;
   const giftNounRe =
-    /(gift\s?card|giftcard|itunes\s?card|apple\s?gift\s?card|google\s?play\s?card|amazon\s?gift\s?card|steam\s?card|ギフトカード|ギフト券|プリペイド|電子マネー|itunesカード|apple\s?gift\s?card|google\s?playカード|amazonギフト|appleカード|steamカード)/i;
-  const giftCodeRe = /\b(gift\s?card\s?(code|pin)|code|pin)\b|コード|番号|pin/i;
+    /(gift\s?card|giftcard|itunes\s?card|apple\s?gift\s?card|google\s?play\s?card|amazon\s?gift\s?card|steam\s?card|ギフトカード|ギフト券|プリペイド|itunesカード|apple\s?gift\s?card|google\s?playカード|amazonギフト|steamカード)/i;
   const giftActionThenNounRe = new RegExp(`${giftActionRe.source}[\\s\\S]{0,60}${giftNounRe.source}`, "i");
   const giftNounThenActionRe = new RegExp(`${giftNounRe.source}[\\s\\S]{0,60}${giftActionRe.source}`, "i");
-  const giftNounThenCodeRe = new RegExp(`${giftNounRe.source}[\\s\\S]{0,40}${giftCodeRe.source}`, "i");
-  const giftCodeThenNounRe = new RegExp(`${giftCodeRe.source}[\\s\\S]{0,40}${giftNounRe.source}`, "i");
   const asksGiftCard =
     giftActionThenNounRe.test(t) ||
-    giftNounThenActionRe.test(t) ||
-    giftNounThenCodeRe.test(t) ||
-    giftCodeThenNounRe.test(t);
+    giftNounThenActionRe.test(t);
   /*
     Manual tests (gift card):
     A) "iTunesカード買って番号送って" => BLOCK
