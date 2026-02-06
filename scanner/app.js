@@ -126,6 +126,17 @@ function signals(text, ex) {
     C) "ギフトカードの話題（雑談）だよ" => PASS
   */
 
+  // secrecy / keep-it-secret request (composite only)
+  const secrecyRe =
+    /(内緒|誰にも言わないで|秘密|ばれたら|家族に言うな|相談するな|この話は秘密|keep it secret|don't tell anyone|confidential|don't share this|keep between us)/i;
+  const hasSecrecyRequest = secrecyRe.test(t);
+  /*
+    Manual tests (secrecy):
+    A) "この話は内緒にしてね" => PASS
+    B) "誰にも言わないで。iTunesカード買って番号送って" => BLOCK
+    C) "Keep this secret. Login here: https://example.com/login" => BLOCK
+  */
+
   // delivery / flea-market spoof
   const deliveryMarketRe =
     /(ヤマト|佐川|日本郵便|ゆうパック|不在|再配達|配達|荷物|追跡|伝票|お届け|住所確認|関税|メルカリ|ラクマ|PayPayフリマ|購入|発送|受取|取引|delivery|parcel|shipment|reschedule|failed delivery|customs|tracking|waybill)/i;
@@ -291,6 +302,7 @@ function signals(text, ex) {
     domain_unknown: domainUnknown,
     has_shortener: ex.has_shortener,
     asks_gift_card: asksGiftCard,
+    has_secrecy_request: hasSecrecyRequest,
     has_delivery_or_market_spoof: hasDeliveryOrMarketSpoof,
     has_payment_refund_scam: hasPaymentRefundScam,
     has_prize_or_grant_scam: hasPrizeOrGrantScam,

@@ -75,6 +75,24 @@
       "evidence": ["sig:gift_card"]
     },
     {
+      "id": "secrecy_plus_high_stakes",
+      "if": ["has_secrecy_request", "high_stakes"],
+      "severity": "BLOCK",
+      "evidence": ["sig:secrecy", "sig:high_stakes"]
+    },
+    {
+      "id": "secrecy_plus_gift_card",
+      "if": ["has_secrecy_request", "asks_gift_card"],
+      "severity": "BLOCK",
+      "evidence": ["sig:secrecy", "sig:gift_card"]
+    },
+    {
+      "id": "secrecy_plus_transfer",
+      "if": ["has_secrecy_request", "asks_payment_or_transfer"],
+      "severity": "BLOCK",
+      "evidence": ["sig:secrecy", "sig:payment_or_transfer"]
+    },
+    {
       "id": "unknown_domain",
       "if": ["has_url", "domain_unknown"],
       "severity": "DELAY",
