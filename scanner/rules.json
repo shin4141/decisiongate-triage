@@ -69,6 +69,12 @@
       "evidence": ["sig:shortener", "sig:high_stakes"]
     },
     {
+      "id": "threat_login_link",
+      "if": ["has_threat", "asks_login", "has_url"],
+      "severity": "BLOCK",
+      "evidence": ["sig:threat", "sig:login", "sig:url"]
+    },
+    {
       "id": "gift_card_request",
       "if": ["asks_gift_card"],
       "severity": "BLOCK",

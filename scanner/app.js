@@ -221,7 +221,7 @@ function signals(text, ex) {
 
   // threats / time limit
   const threatRe =
-    /account will be closed|suspended|legal action|police|arrest|訴訟|凍結|停止|逮捕|法的措置|閉鎖/;
+    /account will be closed|suspended|legal action|police|arrest|訴訟|凍結|停止|逮捕|法的措置|閉鎖|アカウント削除|削除されます|利用停止|停止されます|BAN|著作権違反|違反により/;
   const hasThreat = threatRe.test(t);
 
   const timeLimitPhraseRe =
