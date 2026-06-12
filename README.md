@@ -44,6 +44,8 @@ Paste a DM/email and get a single **Decision Card**:
 
 ## Run locally
 
+No install is required for the static demo.
+
 From repo root:
 
 ```bash
@@ -78,5 +80,4 @@ This project is designed to keep results stable under incremental evidence:
 ## License
 
 MIT
-
 
